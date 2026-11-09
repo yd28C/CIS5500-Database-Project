@@ -4,18 +4,18 @@ CIS 5500 final project, Milestone 2 · Nov 9, 2026 · @judy
 
 ## Overview
 
-Three raw datasets were cleaned into CSV files that load directly into the BCNF schema (`schema_BCNF_fixed.sql`). Only 2,610 of 82.8 million input rows (0.003%) were rejected, and every primary key, foreign key and CHECK constraint passes.
+Three raw datasets were cleaned into CSV files that load directly into the BCNF schema (`schema_BCNF_fixed.sql`). Only 2,610 of 89.3 million input rows (0.003%) were rejected, and every primary key, foreign key and CHECK constraint passes.
 
 | Dataset | Source file | Rows in | Coverage | Target tables |
 | --- | --- | --- | --- | --- |
 | D1 Flight prices | Expedia `itineraries.csv` (Kaggle dilwong/flightprices), 31 GB | 82,138,753 | searches 2022-04-16 to 2022-10-05, flights to 2022-11-19 | itinerary, segment, fare\_quote, books |
-| D2 Flight performance | BTS On-Time Reporting `flight_delays_2025_01.csv` | 539,747 | January 2025, 14 carriers, 329 airports | flight\_operation, delayed\_flight |
+| D2 Flight performance | BTS On-Time Reporting, 12 monthly files `flight_delays_2025_01.csv` to `_12.csv` (Kaggle a7madmostafa/us-flight-delays-2025-bts-on-time-performance) | 7,001,619 | full year 2025, 14 carriers, 352 airports | flight\_operation, delayed\_flight |
 | D3 Weather | NOAA GHCN-Daily `ghcn_raw_2025.csv` | 120,371 | 2025, 32 airport stations | weather\_station, weather\_observation |
 | Shared | built from all three | n/a | n/a | airport, airline, route |
 
 The pipeline runs in this order, with each script writing a report of every check it ran:
 
-1. `clean_bts.py`: BTS flight performance (about 20 seconds).
+1. `clean_bts.py`: BTS flight performance, all 12 monthly files in one run (a few minutes).
 2. `clean_ghcn.py`: GHCN weather (a few seconds).
 3. `clean_itineraries.py`: Expedia prices, read in 250,000-row chunks with an on-disk SQLite index to de-duplicate legIds across chunks (75 minutes for the full file).
 4. `build_dimensions.py`: merges airport, airline and route codes from all three datasets and checks every foreign key.
@@ -25,7 +25,7 @@ General rules applied everywhere: codes are trimmed and upper-cased; missing val
 
 ## Flight performance (BTS, D2)
 
-All 539,747 flights passed validation and were kept; none were rejected or deduplicated.
+All 7,001,619 flights from January 1 to December 31, 2025 passed validation and were kept; none were rejected or deduplicated.
 
 **Rules applied**
 
@@ -35,7 +35,7 @@ All 539,747 flights passed validation and were kept; none were rejected or dedup
 - **Delays.** Negative delays are kept because they mean early departures or arrivals. DepDelay and ArrDelay were recomputed from the clock times as a consistency check.
 - **Status.** Cancelled and diverted flights stay in the table with null actual times and delays. Cancelled must agree with CancellationCode (A to D), since the schema derives cancelled from the code, and no flight may be both cancelled and diverted.
 - **Duplicates.** Checked on the candidate key (FlightDate, airline, flight number, Origin) and on whole rows.
-- **Delay causes.** For every flight with ArrDel15 = 1, all five causes must be present and non-negative and must add up to ArrDelay. These rows form `delayed_flight`.
+- **Delay causes.** For every flight with ArrDel15 = 1, all five causes must be present and non-negative, and their sum is checked against ArrDelay. These rows form `delayed_flight`.
 - **Dropped derived columns.** ActualElapsedTime, DepDelayMinutes and ArrDel15 were each confirmed to be exactly derivable before being dropped; Distance moved to `route`.
 
 **What the checks found**
@@ -44,14 +44,15 @@ All 539,747 flights passed validation and were kept; none were rejected or dedup
 | --- | --- |
 | Malformed codes, dates or HHMM times | 0 |
 | Duplicate candidate keys | 0 |
-| Cancelled flights kept | 16,312 (codes: B weather 14,327, A carrier 1,635, C NAS 342, D security 8) |
-| Diverted flights kept | 1,166 |
-| Negative DepDelay / ArrDelay kept | 325,311 / 341,773 |
-| Null DepDelay / ArrDelay kept | 15,923 / 17,478 |
-| Delayed flights with complete causes summing to ArrDelay | 98,130 of 98,130 |
+| Cancelled flights kept | 102,876 (codes: B weather 63,404, A carrier 21,073, C NAS 18,349, D security 50) |
+| Diverted flights kept | 19,258 |
+| Negative DepDelay / ArrDelay kept | 4,017,675 / 4,176,073 |
+| Null DepDelay / ArrDelay kept | 98,591 / 122,135 |
+| Delayed flights (ArrDel15 = 1) with all five causes | 1,534,638 of 1,534,638 |
+| Causes that do not add up to ArrDelay | 14 rows, kept |
 | ActualElapsedTime = TaxiOut + AirTime + TaxiIn | true for every row |
-| ArrDelay inconsistent with clock times | 2 rows, off by about 6 minutes, kept |
-| Routes with more than one Distance value | 0 of 5,649 |
+| DepDelay / ArrDelay inconsistent with clock times | 7 / 58 rows, kept |
+| Routes with more than one Distance value | 495 of 6,938 (most common value stored) |
 
 ## Weather (GHCN-Daily, D3)
 
@@ -128,34 +129,34 @@ All three datasets join on standardized IATA codes, and every foreign key in the
 
 **How the shared tables are built**
 
-- **airport** (365 rows): the union of airport codes from all three datasets. City and state come from BTS, since D1 and D3 carry codes only.
+- **airport** (382 rows): the union of airport codes from all three datasets. City and state come from BTS, since D1 and D3 carry codes only.
 - **airline** (21 rows): the union of carrier codes. Names come from Expedia's segmentsAirlineName where present, otherwise from a lookup of BTS carrier names.
-- **route** (6,151 rows): every directed airport pair flown in BTS or in an Expedia segment. distance\_miles uses BTS Distance when the route is in BTS, otherwise the most common Expedia segmentsDistance.
+- **route** (7,205 rows): every directed airport pair flown in BTS or in an Expedia segment. distance\_miles uses BTS Distance when the route is in BTS, otherwise the most common Expedia segmentsDistance.
 
 **Overlap between datasets**
 
 | Measure | Result |
 | --- | --- |
-| Expedia airports also in BTS 2025 | 192 of 228 |
+| Expedia airports also in BTS 2025 | 198 of 228 |
 | Expedia airports with a weather station | 31 of 228 |
-| Routes in both Expedia and BTS | 2,699 |
+| Routes in both Expedia and BTS | 2,934 |
 | Carriers in both | AA, AS, B6, DL, F9, HA, NK, UA |
-| BTS flights departing a weather airport | 358,500 of 539,747 |
-| BTS flights with weather at both ends | 207,321 |
+| BTS flights departing a weather airport | 4,612,460 of 7,001,619 |
+| BTS flights with weather at both ends | 2,617,265 |
 
 **Known limitations**
 
 - BTS reports the operating carrier (for example SkyWest OO, Envoy MQ, Republic YX), while Expedia shows the marketing carrier (AA, DL, UA). Regional flights therefore compare at the brand level only.
-- 36 small or foreign Expedia airports (for example ACK, MVY, CUN) are not in the January 2025 BTS data, so their city and state are null.
+- 30 small or foreign Expedia airports (for example BOG, CUN, HOT) are not in the 2025 BTS data, so their city and state are null.
 - 7 Expedia carriers have no BTS counterpart (3M, 4B, 9K, 9X, KG, LF, SY).
-- On 995 shared routes the Expedia distance differs from BTS by more than 5 miles; the BTS value is stored. 31 Expedia-only routes have no distance.
+- On 1,065 shared routes the Expedia distance differs from BTS by more than 5 miles; the BTS value is stored. 23 Expedia-only routes have no distance.
 - Prices are from 2022 and performance from 2025, so the two are compared at aggregated airline or route level, not flight by flight. Performance and weather link by airport and date.
 
 **Foreign-key checks (all 0 violations):** route to airport, weather\_station to airport, flight\_operation to airline and route, delayed\_flight to flight\_operation, weather\_observation to weather\_station, segment to itinerary, airline and route, fare\_quote to itinerary, and books to segment through fare\_quote.leg\_id. The full D2 and D3 tables plus a synthetic D1 test sample were also loaded into PostgreSQL 16 with the schema's constraints enabled, and all of them loaded without error.
 
 ## Final tables and how to reproduce
 
-The cleaned output is about 10.4 GB of CSV across 11 tables.
+The cleaned output is about 11 GB of CSV across 11 tables.
 
 | Table | Rows | Source |
 | --- | --- | --- |
@@ -163,11 +164,11 @@ The cleaned output is about 10.4 GB of CSV across 11 tables.
 | fare\_quote | 82,136,143 | D1 |
 | segment | 12,579,730 | D1 |
 | itinerary | 5,999,650 | D1 |
-| flight\_operation | 539,747 | D2 |
+| flight\_operation | 7,001,619 | D2 |
 | weather\_observation | 120,371 | D3 |
-| delayed\_flight | 98,130 | D2 |
-| route | 6,151 | D1 + D2 |
-| airport | 365 | D1 + D2 + D3 |
+| delayed\_flight | 1,534,638 | D2 |
+| route | 7,205 | D1 + D2 |
+| airport | 382 | D1 + D2 + D3 |
 | weather\_station | 32 | D3 |
 | airline | 21 | D1 + D2 |
 
@@ -176,7 +177,7 @@ Itineraries by number of segments: nonstop 651,615; 2 segments 4,133,183; 3 segm
 **To reproduce** (Python 3 with pandas, from the `cleaning/` folder):
 
 ```
-py clean_bts.py --input flight_delays_2025_01.csv --out output
+py clean_bts.py --input flight_delays_2025_*.csv --out output
 py clean_ghcn.py --input ghcn_raw_2025.csv --out output
 py clean_itineraries.py --input itineraries.csv --out output
 py build_dimensions.py --out output

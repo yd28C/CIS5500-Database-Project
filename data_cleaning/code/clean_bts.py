@@ -3,6 +3,7 @@ Clean the BTS on-time performance file (D2) into the Milestone 2 tables.
 
 Usage:
     python clean_bts.py --input ../../flight_delays_2025_01.csv --out output
+    python clean_bts.py --input "C:/Users/judyl/Downloads/bts_2025/*.csv" --out output   # all months
 
 Writes (all ready for PostgreSQL COPY ... CSV HEADER):
     bts_airport.csv        airport_code, city, state          (Origin*/Dest* columns)
@@ -24,6 +25,7 @@ Rules (from the project outline):
     but both are checked here so dropping them loses nothing
 """
 import argparse
+import glob
 import os
 
 import numpy as np
@@ -61,20 +63,58 @@ def clock_diff(actual, scheduled):
     return ((d + 720) % 1440) - 720
 
 
+TEXT_COLS = ["FlightDate", "Reporting_Airline", "Origin", "OriginState", "Dest", "DestState", "CancellationCode"]
+CITY_COLS = ["OriginCityName", "DestCityName"]
+
+
+def load(paths, rep):
+    """Read one or more monthly BTS files. Numeric columns become float32 to keep memory
+    low (12 months is about 6.5 million rows); rows with a non-numeric value in a numeric
+    column are set aside as rejects here, with the column named in the reason."""
+    frames, rejects = [], []
+    for path in paths:
+        part = pd.read_csv(path, dtype=str, keep_default_na=False, na_values=[""])
+        bad = pd.Series("", index=part.index, dtype=object)
+        numeric = {}
+        for c in part.columns:
+            if c in TEXT_COLS or c in CITY_COLS:
+                continue
+            v = pd.to_numeric(part[c], errors="coerce")
+            bad = bad.where(~(part[c].notna() & v.isna()) | (bad != ""), f"bad {c}")
+            numeric[c] = v.astype("float32")
+        if (bad != "").any():  # keep the raw text of rejected rows
+            rejects.append(part[bad != ""].assign(reject_reason=bad[bad != ""]))
+        for c, v in numeric.items():
+            part[c] = v
+        part = part[bad == ""]
+        for c in CITY_COLS:
+            part[c] = part[c].astype("category")
+        rep.add(f"{os.path.basename(path)}: rows", len(part) + int((bad != "").sum()))
+        frames.append(part)
+        print(f"  read {os.path.basename(path)}", flush=True)
+    df = pd.concat(frames, ignore_index=True)
+    for c in CITY_COLS:
+        df[c] = df[c].astype("category")
+    pre = pd.concat(rejects, ignore_index=True) if rejects else df.iloc[0:0].assign(reject_reason="")
+    return df, pre
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", default="../../flight_delays_2025_01.csv")
+    ap.add_argument("--input", nargs="+", default=["../../flight_delays_2025_01.csv"],
+                    help="one or more BTS monthly CSVs; wildcards allowed, e.g. ../bts_2025/*.csv")
     ap.add_argument("--out", default="output")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
     rep = Report("BTS flight performance (D2) cleaning report")
 
-    raw = pd.read_csv(args.input, dtype=str, keep_default_na=False, na_values=[""])
+    paths = sorted({p for pat in args.input for p in (glob.glob(pat) or [pat])})
     rep.section("Input")
-    rep.add("file", os.path.basename(args.input))
-    rep.add("rows", len(raw))
-    rep.add("columns", len(raw.columns))
-    df = raw.copy()
+    df, pre_rejects = load(paths, rep)
+    rep.add("files", len(paths))
+    rep.add("rows", len(df) + len(pre_rejects))
+    rep.add("columns", len(df.columns))
+    rep.add("rows with a non-numeric value in a numeric column (rejected on load)", len(pre_rejects))
     reject = pd.Series("", index=df.index)
 
     def flag(mask, reason):
@@ -216,7 +256,8 @@ def main():
     # ---------------- outputs ----------------
     rep.section("Output")
     ok = (reject == "") & ~exact
-    rej = raw[(reject != "")].assign(reject_reason=reject[reject != ""])
+    rej = pd.concat([pre_rejects, df[(reject != "")].assign(reject_reason=reject[reject != ""])],
+                    ignore_index=True)
     rej.to_csv(os.path.join(args.out, "bts_rejects.csv"), index=False)
     rep.add("rows rejected", len(rej))
     if len(rej):

@@ -9,13 +9,13 @@
 
 ## Airport
 
-- airports: 365
+- airports: 382
 - weather airports: 32
 - weather airports also in BTS: 32
 - D1 airports: 228
-- D1 airports also in BTS 2025: 192
+- D1 airports also in BTS 2025: 198
 - D1 airports with a weather station: 31
-- D1 airports missing from BTS (no city/state): ACK, ATY, BFD, BJC, BOG, CEZ, CNM, CNY, CSG, CUN, CVN, DSI, DUJ, ELD, GLH, GYE, HOT, HRO, HYA, IPL, ITH, IWD, LNS, LWB, MKL, MSS, MVY, MWA, OGS, OWB, PHF, SHD, SLK, TBN, TEX, UIN
+- D1 airports missing from BTS (no city/state): BFD, BJC, BOG, CEZ, CNM, CNY, CSG, CUN, CVN, DSI, DUJ, ELD, GLH, GYE, HOT, HRO, IPL, IWD, LNS, LWB, MKL, MSS, MWA, OGS, OWB, SHD, SLK, TBN, TEX, UIN
 
 ## Airline
 
@@ -28,12 +28,12 @@
 
 ## Route
 
-- routes: 6,151
-- from BTS: 5,649
-- D1-only routes (distance from segmentsDistance): 502
-- routes in both: 2,699
-- routes in both whose D1 and BTS distance differ by > 5 miles: 995
-- routes with null distance: 31
+- routes: 7,205
+- from BTS: 6,938
+- D1-only routes (distance from segmentsDistance): 267
+- routes in both: 2,934
+- routes in both whose D1 and BTS distance differ by > 5 miles: 1,065
+- routes with null distance: 23
 
 ## Foreign-key checks
 
@@ -50,5 +50,5 @@
 
 ## Join coverage (D2 x D3)
 
-- BTS flights departing a weather airport: 358,500 of 539,747
-- BTS flights with weather at both ends: 207,321
+- BTS flights departing a weather airport: 4,612,460 of 7,001,619
+- BTS flights with weather at both ends: 2,617,265

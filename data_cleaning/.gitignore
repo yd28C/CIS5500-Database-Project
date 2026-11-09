@@ -3,6 +3,8 @@ data/cleaned/itinerary.csv
 data/cleaned/segment.csv
 data/cleaned/fare_quote.csv
 data/cleaned/books.csv
+# Full-year BTS flight_operation (560 MB). A sample is in data/cleaned/samples/.
+data/cleaned/flight_operation.csv
 # Full raw Expedia file (31 GB): download from Kaggle. A sample is in data/raw/.
 data/raw/itineraries-dataset1.csv
 data/raw/itineraries.csv
@@ -11,3 +13,6 @@ data/raw/itineraries.csv
 __pycache__/
 output/
 output_test/
+# leftovers from the cleaning runs (not part of the deliverable)
+data/cleaned/d1_rejects.csv
+*.zip

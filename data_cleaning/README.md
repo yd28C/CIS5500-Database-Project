@@ -17,10 +17,10 @@ code/                    cleaning scripts, schema and load script
   load.sql               \copy every table in foreign-key order
 data/raw/                uncleaned data
   ghcn_raw_2025.csv              NOAA GHCN-Daily, 32 airport stations, 2025
-  flight_delays_2025_01.csv.gz   BTS On-Time Performance, January 2025 (gzipped)
+  flight_delays_2025_01.csv.gz   BTS On-Time Performance, January 2025 (gzipped; all 12 months are on Kaggle)
   itineraries_sample.csv         first 10,000 rows of the Expedia file
 data/cleaned/            cleaned tables, one CSV per schema table
-  samples/               first 10,000 rows of the four big Expedia tables
+  samples/               first 10,000 rows of the tables over 100 MB
 docs/                    cleaning methodology
 reports/                 per-script check reports and rejected rows
 ```
@@ -36,6 +36,8 @@ GitHub rejects files over 100 MB, so these are listed in `.gitignore`:
 | `data/cleaned/books.csv` | 2.7 GB | run `code/clean_itineraries.py` |
 | `data/cleaned/segment.csv` | 1.3 GB | run `code/clean_itineraries.py` |
 | `data/cleaned/itinerary.csv` | 381 MB | run `code/clean_itineraries.py` |
+| `data/cleaned/flight_operation.csv` | 560 MB | run `code/clean_bts.py` |
+| Raw BTS, February to December 2025 | about 100 MB per month | [Kaggle: a7madmostafa/us-flight-delays-2025-bts-on-time-performance](https://www.kaggle.com/datasets/a7madmostafa/us-flight-delays-2025-bts-on-time-performance) |
 
 The other sources: BTS [On-Time Reporting Carrier On-Time Performance](https://www.transtats.bts.gov/DL_SelectFields.aspx?gnoyr_VQ=FGJ&QO_fu146_anzr=b0-gvzr)
 and NOAA [GHCN-Daily](https://www.ncei.noaa.gov/pub/data/ghcn/daily/by_station/).
@@ -45,7 +47,7 @@ and NOAA [GHCN-Daily](https://www.ncei.noaa.gov/pub/data/ghcn/daily/by_station/)
 Python 3 with pandas (`pip install pandas`), from the repository root:
 
 ```
-python code/clean_bts.py --input <flight_delays_2025_01.csv> --out data/cleaned
+python code/clean_bts.py --input "<folder>/flight_delays_2025_*.csv" --out data/cleaned
 python code/clean_ghcn.py --input data/raw/ghcn_raw_2025.csv --out data/cleaned
 python code/clean_itineraries.py --input <itineraries.csv> --out data/cleaned
 python code/build_dimensions.py --out data/cleaned
@@ -63,16 +65,18 @@ psql -h <host> -U <user> -d <db> -f code/load.sql
 
 ## Row counts
 
+Flight performance covers all of 2025 (January 1 to December 31). Flight prices are Expedia searches from April to October 2022.
+
 | Table | Rows |
 |---|---|
 | books | 150,191,099 |
 | fare_quote | 82,136,143 |
 | segment | 12,579,730 |
 | itinerary | 5,999,650 |
-| flight_operation | 539,747 |
+| flight_operation | 7,001,619 |
 | weather_observation | 120,371 |
-| delayed_flight | 98,130 |
-| route | 6,151 |
-| airport | 365 |
+| delayed_flight | 1,534,638 |
+| route | 7,205 |
+| airport | 382 |
 | weather_station | 32 |
 | airline | 21 |

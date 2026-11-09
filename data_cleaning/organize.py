@@ -17,7 +17,7 @@ SAMPLE_ROWS = 10_000
 
 TABLES = ["airport", "airline", "route", "flight_operation", "delayed_flight",
           "weather_station", "weather_observation", "itinerary", "segment", "fare_quote", "books"]
-BIG = {"itinerary", "segment", "fare_quote", "books"}   # not pushed to GitHub, samples are
+BIG = {"itinerary", "segment", "fare_quote", "books", "flight_operation"}   # not pushed to GitHub, samples are
 REPORTS = ["report_bts.md", "report_ghcn.md", "report_itineraries.md",
            "report_itineraries_recovered.md", "report_integration.md",
            "bts_rejects.csv", "ghcn_rejects.csv", "d1_rejects_recovered.csv"]

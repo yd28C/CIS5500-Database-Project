@@ -4,7 +4,7 @@ ABI,"Abilene, TX",TX
 ABQ,"Albuquerque, NM",NM
 ABR,"Aberdeen, SD",SD
 ABY,"Albany, GA",GA
-ACK,,
+ACK,"Nantucket, MA",MA
 ACT,"Waco, TX",TX
 ACV,"Arcata/Eureka, CA",CA
 ACY,"Atlantic City, NJ",NJ
@@ -12,14 +12,16 @@ ADK,"Adak Island, AK",AK
 ADQ,"Kodiak, AK",AK
 AEX,"Alexandria, LA",LA
 AGS,"Augusta, GA",GA
+AKN,"King Salmon, AK",AK
 ALB,"Albany, NY",NY
+ALO,"Waterloo, IA",IA
 AMA,"Amarillo, TX",TX
 ANC,"Anchorage, AK",AK
 APN,"Alpena, MI",MI
 ASE,"Aspen, CO",CO
 ATL,"Atlanta, GA",GA
 ATW,"Appleton, WI",WI
-ATY,,
+ATY,"Watertown, SD",SD
 AUS,"Austin, TX",TX
 AVL,"Asheville, NC",NC
 AVP,"Scranton/Wilkes-Barre, PA",PA
@@ -30,6 +32,7 @@ BET,"Bethel, AK",AK
 BFD,,
 BFF,"Scottsbluff, NE",NE
 BFL,"Bakersfield, CA",CA
+BGM,"Binghamton, NY",NY
 BGR,"Bangor, ME",ME
 BHM,"Birmingham, AL",AL
 BIH,"Bishop, CA",CA
@@ -67,6 +70,7 @@ CHS,"Charleston, SC",SC
 CID,"Cedar Rapids/Iowa City, IA",IA
 CIU,"Sault Ste. Marie, MI",MI
 CKB,"Clarksburg/Fairmont, WV",WV
+CLD,"Carlsbad, CA",CA
 CLE,"Cleveland, OH",OH
 CLL,"College Station/Bryan, TX",TX
 CLT,"Charlotte, NC",NC
@@ -85,6 +89,7 @@ CSG,,
 CUN,,
 CVG,"Cincinnati, OH",KY
 CVN,,
+CWA,"Mosinee, WI",WI
 CYS,"Cheyenne, WY",WY
 DAB,"Daytona Beach, FL",FL
 DAL,"Dallas, TX",TX
@@ -94,7 +99,9 @@ DDC,"Dodge City, KS",KS
 DEC,"Decatur, IL",IL
 DEN,"Denver, CO",CO
 DFW,"Dallas/Fort Worth, TX",TX
+DHN,"Dothan, AL",AL
 DIK,"Dickinson, ND",ND
+DLG,"Dillingham, AK",AK
 DLH,"Duluth, MN",MN
 DRO,"Durango, CO",CO
 DSI,,
@@ -110,9 +117,11 @@ EKO,"Elko, NV",NV
 ELD,,
 ELM,"Elmira/Corning, NY",NY
 ELP,"El Paso, TX",TX
+ERI,"Erie, PA",PA
 ESC,"Escanaba, MI",MI
 EUG,"Eugene, OR",OR
 EVV,"Evansville, IN",IN
+EWN,"New Bern/Morehead/Beaufort, NC",NC
 EWR,"Newark, NJ",NJ
 EYW,"Key West, FL",FL
 FAI,"Fairbanks, AK",AK
@@ -122,6 +131,7 @@ FAY,"Fayetteville, NC",NC
 FCA,"Kalispell, MT",MT
 FLG,"Flagstaff, AZ",AZ
 FLL,"Fort Lauderdale, FL",FL
+FMN,"Farmington, NM",NM
 FNT,"Flint, MI",MI
 FOD,"Fort Dodge, IA",IA
 FSD,"Sioux Falls, SD",SD
@@ -142,8 +152,11 @@ GRK,"Killeen, TX",TX
 GRR,"Grand Rapids, MI",MI
 GSO,"Greensboro/High Point, NC",NC
 GSP,"Greer, SC",SC
+GST,"Gustavus, AK",AK
 GTF,"Great Falls, MT",MT
+GTR,"Columbus, MS",MS
 GUC,"Gunnison, CO",CO
+GUF,"Gulf Shores, AL",AL
 GUM,"Guam, TT",TT
 GYE,,
 HDN,"Hayden, CO",CO
@@ -160,7 +173,7 @@ HRL,"Harlingen/San Benito, TX",TX
 HRO,,
 HSV,"Huntsville, AL",AL
 HTS,"Ashland, WV",WV
-HYA,,
+HYA,"Hyannis, MA",MA
 HYS,"Hays, KS",KS
 IAD,"Washington, DC",VA
 IAG,"Niagara Falls, NY",NY
@@ -173,7 +186,7 @@ IND,"Indianapolis, IN",IN
 INL,"International Falls, MN",MN
 IPL,,
 ISP,"Islip, NY",NY
-ITH,,
+ITH,"Ithaca/Cortland, NY",NY
 ITO,"Hilo, HI",HI
 IWD,,
 JAC,"Jackson, WY",WY
@@ -186,6 +199,7 @@ JNU,"Juneau, AK",AK
 JST,"Johnstown, PA",PA
 KOA,"Kona, HI",HI
 KTN,"Ketchikan, AK",AK
+LAF,"Lafayette, IN",IN
 LAN,"Lansing, MI",MI
 LAR,"Laramie, WY",WY
 LAS,"Las Vegas, NV",NV
@@ -240,7 +254,7 @@ MSP,"Minneapolis, MN",MN
 MSS,,
 MSY,"New Orleans, LA",LA
 MTJ,"Montrose/Delta, CO",CO
-MVY,,
+MVY,"Martha's Vineyard, MA",MA
 MWA,,
 MYR,"Myrtle Beach, SC",SC
 OAJ,"Jacksonville/Camp Lejeune, NC",NC
@@ -262,13 +276,14 @@ PBG,"Plattsburgh, NY",NY
 PBI,"West Palm Beach/Palm Beach, FL",FL
 PDX,"Portland, OR",OR
 PGD,"Punta Gorda, FL",FL
-PHF,,
+PHF,"Newport News/Williamsburg, VA",VA
 PHL,"Philadelphia, PA",PA
 PHX,"Phoenix, AZ",AZ
 PIA,"Peoria, IL",IL
 PIB,"Hattiesburg/Laurel, MS",MS
 PIE,"St. Petersburg, FL",FL
 PIH,"Pocatello, ID",ID
+PIR,"Pierre, SD",SD
 PIT,"Pittsburgh, PA",PA
 PLN,"Pellston, MI",MI
 PNS,"Pensacola, FL",FL
@@ -359,7 +374,9 @@ UIN,,
 USA,"Concord, NC",NC
 VCT,"Victoria, TX",TX
 VPS,"Valparaiso, FL",FL
+VRB,"Vero Beach, FL",FL
 WRG,"Wrangell, AK",AK
+WYS,"West Yellowstone, MT",MT
 XNA,"Fayetteville, AR",AR
 XWA,"Williston, ND",ND
 YAK,"Yakutat, AK",AK
