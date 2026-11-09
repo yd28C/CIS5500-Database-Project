@@ -1,0 +1,13 @@
+# Full Expedia tables: too big for GitHub (over 100 MB each). Samples are in data/cleaned/samples/.
+data/cleaned/itinerary.csv
+data/cleaned/segment.csv
+data/cleaned/fare_quote.csv
+data/cleaned/books.csv
+# Full raw Expedia file (31 GB): download from Kaggle. A sample is in data/raw/.
+data/raw/itineraries-dataset1.csv
+data/raw/itineraries.csv
+# scratch
+*.sqlite
+__pycache__/
+output/
+output_test/

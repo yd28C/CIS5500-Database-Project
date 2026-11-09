@@ -1,0 +1,366 @@
+airport_code,city,state
+ABE,"Allentown/Bethlehem/Easton, PA",PA
+ABI,"Abilene, TX",TX
+ABQ,"Albuquerque, NM",NM
+ABR,"Aberdeen, SD",SD
+ABY,"Albany, GA",GA
+ACK,,
+ACT,"Waco, TX",TX
+ACV,"Arcata/Eureka, CA",CA
+ACY,"Atlantic City, NJ",NJ
+ADK,"Adak Island, AK",AK
+ADQ,"Kodiak, AK",AK
+AEX,"Alexandria, LA",LA
+AGS,"Augusta, GA",GA
+ALB,"Albany, NY",NY
+AMA,"Amarillo, TX",TX
+ANC,"Anchorage, AK",AK
+APN,"Alpena, MI",MI
+ASE,"Aspen, CO",CO
+ATL,"Atlanta, GA",GA
+ATW,"Appleton, WI",WI
+ATY,,
+AUS,"Austin, TX",TX
+AVL,"Asheville, NC",NC
+AVP,"Scranton/Wilkes-Barre, PA",PA
+AZA,"Phoenix, AZ",AZ
+AZO,"Kalamazoo, MI",MI
+BDL,"Hartford, CT",CT
+BET,"Bethel, AK",AK
+BFD,,
+BFF,"Scottsbluff, NE",NE
+BFL,"Bakersfield, CA",CA
+BGR,"Bangor, ME",ME
+BHM,"Birmingham, AL",AL
+BIH,"Bishop, CA",CA
+BIL,"Billings, MT",MT
+BIS,"Bismarck/Mandan, ND",ND
+BJC,,
+BJI,"Bemidji, MN",MN
+BLI,"Bellingham, WA",WA
+BLV,"Belleville, IL",IL
+BMI,"Bloomington/Normal, IL",IL
+BNA,"Nashville, TN",TN
+BOG,,
+BOI,"Boise, ID",ID
+BOS,"Boston, MA",MA
+BPT,"Beaumont/Port Arthur, TX",TX
+BQN,"Aguadilla, PR",PR
+BRD,"Brainerd, MN",MN
+BRO,"Brownsville, TX",TX
+BRW,"Barrow, AK",AK
+BTM,"Butte, MT",MT
+BTR,"Baton Rouge, LA",LA
+BTV,"Burlington, VT",VT
+BUF,"Buffalo, NY",NY
+BUR,"Burbank, CA",CA
+BWI,"Baltimore, MD",MD
+BZN,"Bozeman, MT",MT
+CAE,"Columbia, SC",SC
+CAK,"Akron, OH",OH
+CDC,"Cedar City, UT",UT
+CDV,"Cordova, AK",AK
+CEZ,,
+CHA,"Chattanooga, TN",TN
+CHO,"Charlottesville, VA",VA
+CHS,"Charleston, SC",SC
+CID,"Cedar Rapids/Iowa City, IA",IA
+CIU,"Sault Ste. Marie, MI",MI
+CKB,"Clarksburg/Fairmont, WV",WV
+CLE,"Cleveland, OH",OH
+CLL,"College Station/Bryan, TX",TX
+CLT,"Charlotte, NC",NC
+CMH,"Columbus, OH",OH
+CMI,"Champaign/Urbana, IL",IL
+CMX,"Hancock/Houghton, MI",MI
+CNM,,
+CNY,,
+COD,"Cody, WY",WY
+COS,"Colorado Springs, CO",CO
+COU,"Columbia, MO",MO
+CPR,"Casper, WY",WY
+CRP,"Corpus Christi, TX",TX
+CRW,"Charleston/Dunbar, WV",WV
+CSG,,
+CUN,,
+CVG,"Cincinnati, OH",KY
+CVN,,
+CYS,"Cheyenne, WY",WY
+DAB,"Daytona Beach, FL",FL
+DAL,"Dallas, TX",TX
+DAY,"Dayton, OH",OH
+DCA,"Washington, DC",VA
+DDC,"Dodge City, KS",KS
+DEC,"Decatur, IL",IL
+DEN,"Denver, CO",CO
+DFW,"Dallas/Fort Worth, TX",TX
+DIK,"Dickinson, ND",ND
+DLH,"Duluth, MN",MN
+DRO,"Durango, CO",CO
+DSI,,
+DSM,"Des Moines, IA",IA
+DTW,"Detroit, MI",MI
+DUJ,,
+DVL,"Devils Lake, ND",ND
+EAR,"Kearney, NE",NE
+EAU,"Eau Claire, WI",WI
+ECP,"Panama City, FL",FL
+EGE,"Eagle, CO",CO
+EKO,"Elko, NV",NV
+ELD,,
+ELM,"Elmira/Corning, NY",NY
+ELP,"El Paso, TX",TX
+ESC,"Escanaba, MI",MI
+EUG,"Eugene, OR",OR
+EVV,"Evansville, IN",IN
+EWR,"Newark, NJ",NJ
+EYW,"Key West, FL",FL
+FAI,"Fairbanks, AK",AK
+FAR,"Fargo, ND",ND
+FAT,"Fresno, CA",CA
+FAY,"Fayetteville, NC",NC
+FCA,"Kalispell, MT",MT
+FLG,"Flagstaff, AZ",AZ
+FLL,"Fort Lauderdale, FL",FL
+FNT,"Flint, MI",MI
+FOD,"Fort Dodge, IA",IA
+FSD,"Sioux Falls, SD",SD
+FSM,"Fort Smith, AR",AR
+FWA,"Fort Wayne, IN",IN
+GCC,"Gillette, WY",WY
+GCK,"Garden City, KS",KS
+GEG,"Spokane, WA",WA
+GFK,"Grand Forks, ND",ND
+GGG,"Longview, TX",TX
+GJT,"Grand Junction, CO",CO
+GLH,,
+GNV,"Gainesville, FL",FL
+GPT,"Gulfport/Biloxi, MS",MS
+GRB,"Green Bay, WI",WI
+GRI,"Grand Island, NE",NE
+GRK,"Killeen, TX",TX
+GRR,"Grand Rapids, MI",MI
+GSO,"Greensboro/High Point, NC",NC
+GSP,"Greer, SC",SC
+GTF,"Great Falls, MT",MT
+GUC,"Gunnison, CO",CO
+GUM,"Guam, TT",TT
+GYE,,
+HDN,"Hayden, CO",CO
+HGR,"Hagerstown, MD",MD
+HHH,"Hilton Head, SC",SC
+HIB,"Hibbing, MN",MN
+HLN,"Helena, MT",MT
+HNL,"Honolulu, HI",HI
+HOB,"Hobbs, NM",NM
+HOT,,
+HOU,"Houston, TX",TX
+HPN,"White Plains, NY",NY
+HRL,"Harlingen/San Benito, TX",TX
+HRO,,
+HSV,"Huntsville, AL",AL
+HTS,"Ashland, WV",WV
+HYA,,
+HYS,"Hays, KS",KS
+IAD,"Washington, DC",VA
+IAG,"Niagara Falls, NY",NY
+IAH,"Houston, TX",TX
+ICT,"Wichita, KS",KS
+IDA,"Idaho Falls, ID",ID
+ILM,"Wilmington, NC",NC
+IMT,"Iron Mountain/Kingsfd, MI",MI
+IND,"Indianapolis, IN",IN
+INL,"International Falls, MN",MN
+IPL,,
+ISP,"Islip, NY",NY
+ITH,,
+ITO,"Hilo, HI",HI
+IWD,,
+JAC,"Jackson, WY",WY
+JAN,"Jackson/Vicksburg, MS",MS
+JAX,"Jacksonville, FL",FL
+JFK,"New York, NY",NY
+JLN,"Joplin, MO",MO
+JMS,"Jamestown, ND",ND
+JNU,"Juneau, AK",AK
+JST,"Johnstown, PA",PA
+KOA,"Kona, HI",HI
+KTN,"Ketchikan, AK",AK
+LAN,"Lansing, MI",MI
+LAR,"Laramie, WY",WY
+LAS,"Las Vegas, NV",NV
+LAW,"Lawton/Fort Sill, OK",OK
+LAX,"Los Angeles, CA",CA
+LBB,"Lubbock, TX",TX
+LBE,"Latrobe, PA",PA
+LBF,"North Platte, NE",NE
+LBL,"Liberal, KS",KS
+LCH,"Lake Charles, LA",LA
+LCK,"Columbus, OH",OH
+LEX,"Lexington, KY",KY
+LFT,"Lafayette, LA",LA
+LGA,"New York, NY",NY
+LGB,"Long Beach, CA",CA
+LIH,"Lihue, HI",HI
+LIT,"Little Rock, AR",AR
+LNK,"Lincoln, NE",NE
+LNS,,
+LRD,"Laredo, TX",TX
+LSE,"La Crosse, WI",WI
+LWB,,
+LWS,"Lewiston, ID",ID
+MAF,"Midland/Odessa, TX",TX
+MBS,"Saginaw/Bay City/Midland, MI",MI
+MCI,"Kansas City, MO",MO
+MCO,"Orlando, FL",FL
+MCW,"Mason City, IA",IA
+MDT,"Harrisburg, PA",PA
+MDW,"Chicago, IL",IL
+MEI,"Meridian, MS",MS
+MEM,"Memphis, TN",TN
+MFE,"Mission/McAllen/Edinburg, TX",TX
+MFR,"Medford, OR",OR
+MGM,"Montgomery, AL",AL
+MGW,"Morgantown, WV",WV
+MHK,"Manhattan/Ft. Riley, KS",KS
+MHT,"Manchester, NH",NH
+MIA,"Miami, FL",FL
+MKE,"Milwaukee, WI",WI
+MKL,,
+MLB,"Melbourne, FL",FL
+MLI,"Moline, IL",IL
+MLU,"Monroe, LA",LA
+MOB,"Mobile, AL",AL
+MOT,"Minot, ND",ND
+MQT,"Marquette, MI",MI
+MRY,"Monterey, CA",CA
+MSN,"Madison, WI",WI
+MSO,"Missoula, MT",MT
+MSP,"Minneapolis, MN",MN
+MSS,,
+MSY,"New Orleans, LA",LA
+MTJ,"Montrose/Delta, CO",CO
+MVY,,
+MWA,,
+MYR,"Myrtle Beach, SC",SC
+OAJ,"Jacksonville/Camp Lejeune, NC",NC
+OAK,"Oakland, CA",CA
+OGG,"Kahului, HI",HI
+OGS,,
+OKC,"Oklahoma City, OK",OK
+OMA,"Omaha, NE",NE
+OME,"Nome, AK",AK
+ONT,"Ontario, CA",CA
+ORD,"Chicago, IL",IL
+ORF,"Norfolk, VA",VA
+ORH,"Worcester, MA",MA
+OTH,"North Bend/Coos Bay, OR",OR
+OTZ,"Kotzebue, AK",AK
+OWB,,
+PAE,"Everett, WA",WA
+PBG,"Plattsburgh, NY",NY
+PBI,"West Palm Beach/Palm Beach, FL",FL
+PDX,"Portland, OR",OR
+PGD,"Punta Gorda, FL",FL
+PHF,,
+PHL,"Philadelphia, PA",PA
+PHX,"Phoenix, AZ",AZ
+PIA,"Peoria, IL",IL
+PIB,"Hattiesburg/Laurel, MS",MS
+PIE,"St. Petersburg, FL",FL
+PIH,"Pocatello, ID",ID
+PIT,"Pittsburgh, PA",PA
+PLN,"Pellston, MI",MI
+PNS,"Pensacola, FL",FL
+PPG,"Pago Pago, TT",TT
+PQI,"Presque Isle/Houlton, ME",ME
+PRC,"Prescott, AZ",AZ
+PSC,"Pasco/Kennewick/Richland, WA",WA
+PSE,"Ponce, PR",PR
+PSG,"Petersburg, AK",AK
+PSM,"Portsmouth, NH",NH
+PSP,"Palm Springs, CA",CA
+PVD,"Providence, RI",RI
+PVU,"Provo, UT",UT
+PWM,"Portland, ME",ME
+RAP,"Rapid City, SD",SD
+RDD,"Redding, CA",CA
+RDM,"Bend/Redmond, OR",OR
+RDU,"Raleigh/Durham, NC",NC
+RFD,"Rockford, IL",IL
+RHI,"Rhinelander, WI",WI
+RIC,"Richmond, VA",VA
+RIW,"Riverton/Lander, WY",WY
+RKS,"Rock Springs, WY",WY
+RNO,"Reno, NV",NV
+ROA,"Roanoke, VA",VA
+ROC,"Rochester, NY",NY
+ROW,"Roswell, NM",NM
+RST,"Rochester, MN",MN
+RSW,"Fort Myers, FL",FL
+SAF,"Santa Fe, NM",NM
+SAN,"San Diego, CA",CA
+SAT,"San Antonio, TX",TX
+SAV,"Savannah, GA",GA
+SBA,"Santa Barbara, CA",CA
+SBN,"South Bend, IN",IN
+SBP,"San Luis Obispo, CA",CA
+SCC,"Deadhorse, AK",AK
+SCE,"State College, PA",PA
+SCK,"Stockton, CA",CA
+SDF,"Louisville, KY",KY
+SEA,"Seattle, WA",WA
+SFB,"Sanford, FL",FL
+SFO,"San Francisco, CA",CA
+SGF,"Springfield, MO",MO
+SGU,"St. George, UT",UT
+SHD,,
+SHR,"Sheridan, WY",WY
+SHV,"Shreveport, LA",LA
+SIT,"Sitka, AK",AK
+SJC,"San Jose, CA",CA
+SJT,"San Angelo, TX",TX
+SJU,"San Juan, PR",PR
+SLC,"Salt Lake City, UT",UT
+SLK,,
+SLN,"Salina, KS",KS
+SMF,"Sacramento, CA",CA
+SMX,"Santa Maria, CA",CA
+SNA,"Santa Ana, CA",CA
+SPI,"Springfield, IL",IL
+SPN,"Saipan, TT",TT
+SPS,"Wichita Falls, TX",TX
+SRQ,"Sarasota/Bradenton, FL",FL
+STC,"St. Cloud, MN",MN
+STL,"St. Louis, MO",MO
+STS,"Santa Rosa, CA",CA
+STT,"Charlotte Amalie, VI",VI
+STX,"Christiansted, VI",VI
+SUN,"Sun Valley/Hailey/Ketchum, ID",ID
+SUX,"Sioux City, IA",IA
+SWF,"Newburgh/Poughkeepsie, NY",NY
+SWO,"Stillwater, OK",OK
+SYR,"Syracuse, NY",NY
+TBN,,
+TEX,,
+TLH,"Tallahassee, FL",FL
+TOL,"Toledo, OH",OH
+TPA,"Tampa, FL",FL
+TRI,"Bristol/Johnson City/Kingsport, TN",TN
+TTN,"Trenton, NJ",NJ
+TUL,"Tulsa, OK",OK
+TUS,"Tucson, AZ",AZ
+TVC,"Traverse City, MI",MI
+TWF,"Twin Falls, ID",ID
+TXK,"Texarkana, AR",AR
+TYR,"Tyler, TX",TX
+TYS,"Knoxville, TN",TN
+UIN,,
+USA,"Concord, NC",NC
+VCT,"Victoria, TX",TX
+VPS,"Valparaiso, FL",FL
+WRG,"Wrangell, AK",AK
+XNA,"Fayetteville, AR",AR
+XWA,"Williston, ND",ND
+YAK,"Yakutat, AK",AK
+YUM,"Yuma, AZ",AZ
