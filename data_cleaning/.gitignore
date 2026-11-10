@@ -16,3 +16,10 @@ output_test/
 # leftovers from the cleaning runs (not part of the deliverable)
 data/cleaned/d1_rejects.csv
 *.zip
+
+# Generated nonstop datasets
+/data/nonstop_data/
+# DuckDB temporary files
+*.duckdb
+*.duckdb.wal
+duckdb_temp/
