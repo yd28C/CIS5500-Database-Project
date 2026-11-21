@@ -91,6 +91,75 @@ router.get('/airlines/:airlineCode/top-routes', async (req, res) => {
   }
 });
 
+// ---------- Q6: airline reliability and delay causes ----------
+// GET /airlines/:airlineCode/reliability
+router.get('/airlines/:airlineCode/reliability', async (req, res) => {
+  const code = req.params.airlineCode.toUpperCase();
+  try {
+    const rows = await query(`
+    WITH reliability AS (
+      SELECT
+        airline_code,
+        COUNT(*) AS total_flights,
+        ROUND(
+            100.0 * COUNT(*) FILTER (
+                WHERE arr_delay_min < 15
+                  AND cancellation_code IS NULL
+                  AND diverted = FALSE
+            ) / COUNT(*), 2
+        ) AS on_time_rate,
+        ROUND(
+            100.0 * COUNT(*) FILTER (WHERE arr_delay_min >= 15) 
+            / COUNT(*), 2
+        ) AS delay_rate,
+        ROUND(
+            100.0 * COUNT(*) FILTER (WHERE cancellation_code IS NOT NULL) 
+            / COUNT(*), 2
+        ) AS cancellation_rate,
+        ROUND(
+            AVG(arr_delay_min) FILTER (WHERE arr_delay_min > 0), 2
+        ) AS avg_delay_duration
+    FROM flight_operation
+    WHERE airline_code = $1
+    GROUP BY airline_code
+),
+delay_causes AS (
+    SELECT
+        fo.airline_code,
+        SUM(df.carrier_delay_min) AS carrier_delay,
+        SUM(df.weather_delay_min) AS weather_delay,
+        SUM(df.nas_delay_min) AS nas_delay,
+        SUM(df.security_delay_min) AS security_delay,
+        SUM(df.late_aircraft_delay_min) AS late_aircraft_delay
+    FROM flight_operation fo
+    JOIN delayed_flight df
+        ON fo.operation_id = df.operation_id
+    WHERE fo.airline_code = $1
+    GROUP BY fo.airline_code
+)
+SELECT
+    a.airline_name,
+    r.total_flights,
+    r.on_time_rate,
+    r.delay_rate,
+    r.cancellation_rate,
+    r.avg_delay_duration,
+    d.carrier_delay,
+    d.weather_delay,
+    d.nas_delay,
+    d.security_delay,
+    d.late_aircraft_delay
+FROM airline a
+JOIN reliability r ON a.airline_code = r.airline_code
+LEFT JOIN delay_causes d ON a.airline_code = d.airline_code;
+    `, [code]);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+})
+
 // ---------- Q8: an airport's busiest departing routes ----------
 // GET /airports/:airportCode/top-routes?limit=5&year=2025
 router.get('/airports/:airportCode/top-routes', async (req, res) => {
