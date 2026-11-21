@@ -1,4 +1,4 @@
-"""Run against the team server with the project data loaded (Python 3, standard library)."""
+"""HTTP integration tests for the airport endpoints using project data."""
 import csv
 import json
 import os

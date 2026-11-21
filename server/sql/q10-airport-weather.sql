@@ -1,8 +1,9 @@
--- $1: airport code, $2: calendar year (inclusive January 1 to exclusive next January 1).
--- Aggregate each source BEFORE joining, preventing weather/flight row multiplication.
+-- $1 = airport code, $2 = calendar year.
+-- Group each source by month before joining so each observation is counted once.
 WITH months AS (
     SELECT generate_series(1, 12) AS month
 ), monthly_weather AS (
+    -- GHCN units: TMAX in tenths of °C, PRCP in tenths of mm, SNOW in mm.
     SELECT EXTRACT(MONTH FROM wo.observation_date)::integer AS month,
            ROUND(AVG(wo.raw_value / 10.0) FILTER (
                      WHERE wo.element_code = 'TMAX' AND wo.raw_value <> -9999

@@ -1,5 +1,5 @@
--- $1: airport code, $2: calendar year (inclusive January 1 to exclusive next January 1).
--- Use the same delay/cancellation definitions as Q10.
+-- $1 = airport code, $2 = calendar year.
+-- Delay rates use departures with a recorded delay. Cancellation rates use all scheduled departures.
 WITH departures AS (
     SELECT COUNT(*) AS total_departures,
            COUNT(dep_delay_min) AS departures_with_delay_data,

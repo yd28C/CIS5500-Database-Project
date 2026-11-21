@@ -1,5 +1,5 @@
--- $1: airport code, $2: calendar year (inclusive January 1 to exclusive next January 1).
--- Counts refer to recorded scheduled departures, including cancellations.
+-- $1 = airport code, $2 = calendar year.
+-- Scheduled departures include cancelled flights.
 WITH departures AS (
     SELECT COUNT(*) AS total_departures,
            COUNT(DISTINCT airline_code) AS airlines_served,

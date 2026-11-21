@@ -1,4 +1,3 @@
-// Airports page: Q7 overview, Q9 efficiency, Q10 monthly weather and reliability.
 const express = require('express');
 const fs = require('node:fs');
 const path = require('node:path');
