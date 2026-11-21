@@ -17,6 +17,20 @@ All airports, for dropdowns.
 
 ---
 
+### Q2: GET /routes/reliability
+Compares airline reliability on a specified route, ordered by arrival delay rate from lowest to highest (nulls last).
+
+| Param | Type | In | Required | Description |
+|---|---|---|---|---|
+| origin | string | query | yes | departure airport code, e.g. `PHL` |
+| destination | string | query | yes | arrival airport code, e.g. `LAX` |
+
+Query parameters used in SQL: `$1 = origin`, `$2 = destination`
+
+Response: array of `{ airline_name: string, origin_code: string, destination_code: string, total_flights: integer, departure_delay_rate: number or null, arrival_delay_rate: number or null, cancellation_rate: number }`.
+
+Delay rates are the percentage of flights delayed by at least 15 minutes among flights with a recorded departure or arrival delay, respectively. Cancellation rate uses all scheduled flights for that airline on the route.
+
 ### Q4: GET /airlines/:airlineCode/summary
 An airline's network size and average nonstop ticket price.
 
@@ -50,6 +64,19 @@ An airline's busiest routes by number of flights.
 Query parameters used in SQL: `$1 = airlineCode`, `$2 = limit`
 
 Response: array of `{ origin_code: string, destination_code: string, number_of_flights: integer }`, busiest first.
+
+### Q6: GET /airlines/:airlineCode/reliability
+Returns an airline's on-time, delay, and cancellation rates, average delay duration, and total delay minutes by cause.
+
+| Param | Type | In | Required | Description |
+|---|---|---|---|---|
+| airlineCode | string | path | yes | airline code, e.g. `AA` |
+
+Query parameters used in SQL: `$1 = airlineCode`
+
+Response: array of `{ airline_name: string, total_flights: integer, on_time_rate: number, delay_rate: number, cancellation_rate: number, avg_delay_duration: number, carrier_delay: integer, weather_delay: integer, nas_delay: integer, security_delay: integer, late_aircraft_delay: integer }`.
+
+Rates are percentages. `avg_delay_duration` is measured in minutes. The five delay-cause fields report total minutes attributed to each cause.
 
 ### Q8: GET /airports/:airportCode/top-routes
 An airport's busiest departing routes in a year.
