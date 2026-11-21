@@ -40,6 +40,8 @@ class AirportAPI(unittest.TestCase):
         months = self.success("/airports/PHL/weather-reliability")
         self.assertEqual((overview["airport_code"], overview["year"]), ("PHL", 2025))
         self.assertEqual(overview["total_departures"], annual["total_departures"])
+        self.assertEqual(overview["total_arrivals"], annual["total_arrivals"])
+        self.assertEqual(overview["total_scheduled_operations"], annual["total_departures"] + annual["total_arrivals"])
         self.assertEqual([m["month"] for m in months], list(range(1, 13)))
         for key in ("total_departures", "departures_with_delay_data", "delayed_departures", "cancelled_departures"):
             self.assertEqual(sum(m[key] for m in months), annual[key])
@@ -78,20 +80,21 @@ class AirportAPI(unittest.TestCase):
         for month in self.success("/airports/PHL/weather-reliability"):
             self.assertEqual(month["weather_station_id"], station)
             for element, field, days in [
-                ("TMAX", "avg_daily_max_temp_f", "temperature_days"),
+                ("TMAX", "monthly_max_temp_f", "tmax_days"),
+                ("TMIN", "monthly_min_temp_f", "tmin_days"),
                 ("PRCP", "precipitation_inches", "precipitation_days"),
                 ("SNOW", "snowfall_inches", "snowfall_days"),
             ]:
-                values = obs[month["month"], element]
+                values = [v for v in obs[month["month"], element] if v != -9999]
                 self.assertEqual(month[days], len(values))
                 if not values:
                     self.assertIsNone(month[field])
                     continue
-                total = sum(values)
-                if element == "TMAX":
-                    expected = total / len(values) / 10 * 9 / 5 + 32
+                if element in ("TMAX", "TMIN"):
+                    extreme = max(values) if element == "TMAX" else min(values)
+                    expected = extreme / 10 * 9 / 5 + 32
                 else:
-                    expected = total / (254 if element == "PRCP" else Decimal("25.4"))
+                    expected = sum(values) / (254 if element == "PRCP" else Decimal("25.4"))
                 self.assertEqual(month[field], rounded(expected), (month["month"], field))
 
     def test_airport_without_station(self):
@@ -100,6 +103,9 @@ class AirportAPI(unittest.TestCase):
         self.assertTrue(any(m["total_departures"] > 0 for m in months))
         for m in months:
             self.assertIsNone(m["weather_station_id"])
+            self.assertIsNone(m["monthly_max_temp_f"])
+            self.assertIsNone(m["monthly_min_temp_f"])
+            self.assertEqual((m["tmax_days"], m["tmin_days"]), (0, 0))
             self.assertIsNone(m["precipitation_inches"])
             self.assertIsNone(m["snowfall_inches"])
 

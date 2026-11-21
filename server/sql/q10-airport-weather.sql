@@ -3,11 +3,14 @@
 WITH months AS (
     SELECT generate_series(1, 12) AS month
 ), monthly_weather AS (
-    -- GHCN units: TMAX in tenths of °C, PRCP in tenths of mm, SNOW in mm.
+    -- GHCN units: TMAX and TMIN in tenths of °C, PRCP in tenths of mm, SNOW in mm.
     SELECT EXTRACT(MONTH FROM wo.observation_date)::integer AS month,
-           ROUND(AVG(wo.raw_value / 10.0) FILTER (
+           ROUND(MAX(wo.raw_value) FILTER (
                      WHERE wo.element_code = 'TMAX' AND wo.raw_value <> -9999
-                 ) * 9 / 5 + 32, 2) AS avg_daily_max_temp_f,
+                 ) * 9.0 / 50 + 32, 2) AS monthly_max_temp_f,
+           ROUND(MIN(wo.raw_value) FILTER (
+                     WHERE wo.element_code = 'TMIN' AND wo.raw_value <> -9999
+                 ) * 9.0 / 50 + 32, 2) AS monthly_min_temp_f,
            ROUND(SUM(wo.raw_value / 254.0) FILTER (
                      WHERE wo.element_code = 'PRCP' AND wo.raw_value >= 0
                  ), 2) AS precipitation_inches,
@@ -19,7 +22,10 @@ WITH months AS (
            ) AS snowfall_days,
            COUNT(*) FILTER (
                WHERE wo.element_code = 'TMAX' AND wo.raw_value <> -9999
-           ) AS temperature_days,
+           ) AS tmax_days,
+           COUNT(*) FILTER (
+               WHERE wo.element_code = 'TMIN' AND wo.raw_value <> -9999
+           ) AS tmin_days,
            COUNT(*) FILTER (
                WHERE wo.element_code = 'PRCP' AND wo.raw_value >= 0
            ) AS precipitation_days
@@ -28,7 +34,7 @@ WITH months AS (
     WHERE s.airport_code = $1
       AND wo.observation_date >= make_date($2::integer, 1, 1)
       AND wo.observation_date < make_date($2::integer + 1, 1, 1)
-      AND wo.element_code IN ('TMAX', 'PRCP', 'SNOW')
+      AND wo.element_code IN ('TMAX', 'TMIN', 'PRCP', 'SNOW')
     GROUP BY EXTRACT(MONTH FROM wo.observation_date)
 ), monthly_flights AS (
     SELECT EXTRACT(MONTH FROM flight_date)::integer AS month,
@@ -56,9 +62,10 @@ SELECT a.airport_code, $2::integer AS year, s.station_id AS weather_station_id, 
            make_date($2::integer, m.month, 1)
            + INTERVAL '1 month' - INTERVAL '1 day'
        ))::integer AS days_in_month,
-       w.avg_daily_max_temp_f, w.precipitation_inches, w.snowfall_inches,
+       w.monthly_max_temp_f, w.monthly_min_temp_f, w.precipitation_inches, w.snowfall_inches,
        COALESCE(w.snowfall_days, 0) AS snowfall_days,
-       COALESCE(w.temperature_days, 0) AS temperature_days,
+       COALESCE(w.tmax_days, 0) AS tmax_days,
+       COALESCE(w.tmin_days, 0) AS tmin_days,
        COALESCE(w.precipitation_days, 0) AS precipitation_days,
        COALESCE(f.total_departures, 0) AS total_departures,
        COALESCE(f.departures_with_delay_data, 0) AS departures_with_delay_data,

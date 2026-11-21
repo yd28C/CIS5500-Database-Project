@@ -70,7 +70,7 @@ Response: array of `{ origin_code: string, destination_code: string, number_of_f
 
 | Method | Path | Result |
 |---|---|---|
-| GET | `/airports/:airportCode/overview` | One airport profile and its recorded outbound network (Q7) |
+| GET | `/airports/:airportCode/overview` | Airport profile, scheduled arrivals and departures, and network (Q7) |
 | GET | `/airports/:airportCode/efficiency` | One object with outbound reliability and taxi time by direction (Q9) |
 | GET | `/airports/:airportCode/weather-reliability` | Array of 12 monthly weather and outbound reliability records, January first (Q10) |
 
@@ -97,18 +97,20 @@ Known airports return 200 even when a period has no records. Empty groups have z
 
 `GET /airports/PHL/overview?year=2025`
 
-Use this object for the airport profile and network figures. In addition to the common fields, it includes:
+Use **Scheduled arrivals + departures** for the main traffic figure. A flight from PHL to JFK contributes one departure at PHL and one arrival at JFK. Cancelled records still count toward the schedule. Summing the figures across airports therefore counts both ends of a flight when both airports are included.
 
 | Field | Type | Meaning |
 |---|---|---|
 | `city`, `state` | string or null | City label and state as stored in the airport table |
-| `airlines_served` | integer | Distinct operating carriers among outbound records |
+| `total_arrivals` | integer | Scheduled inbound records (airport is the destination) |
+| `total_scheduled_operations` | integer | Scheduled arrivals plus scheduled departures at the selected airport |
+| `airlines_served` | integer | Distinct operating carriers in either direction, counted once per carrier |
 | `destinations` | integer | Distinct scheduled destination airports among outbound records |
 
 Example from the project RDS:
 
 ```json
-{"airport_code":"PHL","year":2025,"city":"Philadelphia, PA","state":"PA","total_departures":97519,"airlines_served":11,"destinations":88,"first_departure_date":"2025-01-01","last_departure_date":"2025-12-31"}
+{"airport_code":"PHL","year":2025,"city":"Philadelphia, PA","state":"PA","total_departures":97519,"total_arrivals":97510,"total_scheduled_operations":195029,"airlines_served":11,"destinations":88,"first_departure_date":"2025-01-01","last_departure_date":"2025-12-31"}
 ```
 
 ### Q9 · Airport efficiency
@@ -146,17 +148,18 @@ Weather and outbound flights are aggregated separately by month before joining t
 |---|---|---|
 | `weather_station_id` | string or null | Station mapped to the selected airport |
 | `month`, `days_in_month` | integer | Calendar month (1–12) and its length |
-| `avg_daily_max_temp_f` | number or null | Average daily high across valid TMAX observations, in °F. Raw tenths of °C are divided by 10 before conversion. |
+| `monthly_max_temp_f` | number or null | Highest valid daily TMAX recorded during the month, in °F |
+| `monthly_min_temp_f` | number or null | Lowest valid daily TMIN recorded during the month, in °F |
 | `precipitation_inches` | number or null | Sum of reported daily PRCP, in inches. Raw units are tenths of a millimeter, divided by 254. |
 | `snowfall_inches` | number or null | Sum of reported new snowfall (SNOW), in inches. Raw units are millimeters, divided by 25.4. |
-| `temperature_days`, `precipitation_days`, `snowfall_days` | integer | Number of valid daily observations used for the corresponding statistic, including reported zeros |
+| `tmax_days`, `tmin_days`, `precipitation_days`, `snowfall_days` | integer | Number of valid daily observations used for the corresponding statistic, including reported zeros |
 
-Each weather statistic is null when its observation count is zero. A total with fewer observed days than calendar days covers only those reported days. Missing months still appear in the array.
+For the chart, label the two series **Monthly high (°F)** and **Monthly low (°F)**. These extrema describe the range of temperatures observed within each month. Each weather statistic is null when its observation count is zero. A total with fewer observed days than calendar days covers only those reported days. Missing months still appear in the array.
 
 First object in the PHL 2025 response:
 
 ```json
-{"airport_code":"PHL","year":2025,"weather_station_id":"USW00013739","month":1,"days_in_month":31,"avg_daily_max_temp_f":36.98,"precipitation_inches":0.93,"snowfall_inches":4.65,"snowfall_days":31,"temperature_days":31,"precipitation_days":31,"total_departures":6688,"departures_with_delay_data":6511,"delayed_departures":1149,"cancelled_departures":185,"departure_delay_rate":17.65,"cancellation_rate":2.77,"first_departure_date":"2025-01-01","last_departure_date":"2025-01-31"}
+{"airport_code":"PHL","year":2025,"weather_station_id":"USW00013739","month":1,"days_in_month":31,"monthly_max_temp_f":53.06,"monthly_min_temp_f":10.22,"precipitation_inches":0.93,"snowfall_inches":4.65,"snowfall_days":31,"tmax_days":31,"tmin_days":31,"precipitation_days":31,"total_departures":6688,"departures_with_delay_data":6511,"delayed_departures":1149,"cancelled_departures":185,"departure_delay_rate":17.65,"cancellation_rate":2.77,"first_departure_date":"2025-01-01","last_departure_date":"2025-01-31"}
 ```
 
 ### Run the Part D checks
