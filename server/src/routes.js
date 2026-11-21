@@ -33,6 +33,54 @@ router.get('/airports', async (req, res) => {
   }
 });
 
+// ---------- Q2: compare airline reliability on a selected route ----------
+// GET /routes/reliability?origin = PHL & destination = LAX
+router.get('/routes/reliability', async (req, res) => {
+  const {origin, destination } = req.query;
+  const airportCode = /^[A-Za-z]{3}$/;
+
+  if (typeof origin !== 'string' || !airportCode.test(origin) ||
+      typeof destination !== 'string' || !airportCode.test(destination)) {
+    return res.status(400).json({
+      error: 'Provide origin and destination as three-letter airport codes.'
+    });
+  }
+  
+  try {
+    const rows = await query(`
+      SELECT a.airline_name, fo.origin_code, fo.destination_code,
+        COUNT(*) AS total_flights,
+        ROUND(100.0 * COUNT(*) 
+          FILTER (
+            WHERE fo.dep_delay_min >= 15) / NULLIF(COUNT(*) 
+          FILTER (
+            WHERE fo.dep_delay_min IS NOT NULL), 0), 2
+        ) AS departure_delay_rate,
+        ROUND(100.0 * COUNT(*) 
+          FILTER (
+            WHERE fo.arr_delay_min >= 15) / NULLIF(COUNT(*) 
+              FILTER (
+              WHERE fo.arr_delay_min IS NOT NULL), 0), 2
+        ) AS arrival_delay_rate,
+         ROUND(100.0 * COUNT(*) 
+          FILTER (
+            WHERE fo.cancellation_code IS NOT NULL) / COUNT(*), 2
+        ) AS cancellation_rate
+      FROM flight_operation fo
+      JOIN airline a ON fo.airline_code = a.airline_code
+      WHERE fo.origin_code = $1 AND fo.destination_code = $2
+      GROUP BY a.airline_code, a.airline_name, fo.origin_code, fo.destination_code
+      ORDER BY arrival_delay_rate ASC NULLS LAST;
+
+    `, [origin.toUpperCase(), destination.toUpperCase()]);
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
 // ---------- Q4: airline network and pricing summary ----------
 // GET /airlines/:airlineCode/summary
 router.get('/airlines/:airlineCode/summary', async (req, res) => {
