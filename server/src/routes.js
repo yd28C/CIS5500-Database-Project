@@ -116,4 +116,5 @@ router.get('/airports/:airportCode/top-routes', async (req, res) => {
 });
 
 router.use(require('./airport-routes'));
+router.use(require('./flight-routes'));
 module.exports = router;
