@@ -171,3 +171,24 @@ python3 test/airport_api.py
 ```
 
 The tests use Python's standard library and issue read-only HTTP requests. By default they target `http://localhost:8080` (override with `AIRPORT_API_URL`). Use the project dataset for these checks. They compare PHL's January flight counts and twelve months of weather to the checked-in BTS and NOAA CSVs. They also check annual/monthly consistency, the Q8 route and airport dropdown, an airport without a station, an empty leap year, and invalid parameters.
+
+## Flights page
+
+### Q1: GET /flights/search
+
+Search individual 2025 flight operations and attach separately aggregated route reliability and 2022 fare references. Historical fares are not prices for the 2025 flights.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| origin, destination | string | yes | Three-letter airport codes |
+| date | string | yes | 2025 flight date, YYYY-MM-DD |
+| departureStart, departureEnd | string | no | Local scheduled departure range, HH:MM; start inclusive and end exclusive |
+| ticketType | string | no | `any` (default), `basic`, or `refundable`; filters historical quotes only |
+
+SQL parameters: `$1` origin, `$2` destination, `$3` flight date, `$4` and `$5` local departure times as HHMM integers, `$6` ticket type. Results include operation ID, flight number, airline, scheduled times and duration; monthly 2025 route/carrier delay and cancellation rates and counts; and 2022 median, minimum, maximum and count of fares. Fare statistics match the route, airline code and departure month, with all matching 2022 search dates and booking windows. Empty fare matches return null fare values and zero quotes. Operating and marketing carrier codes may differ. Departure time filtering does not filter historical fares. Invalid inputs return 400; database failures return 500.
+
+### Q3: GET /flights/booking-trends
+
+Returns nonstop fare averages for quotes observed in 2022 across all routes, grouped by the number of days between the search date and departure date. Same-day searches are excluded. No request or SQL parameters are supported.
+
+Response: an array of `{ booking_window: string, avg_price: number, total_quotes: integer }`, ordered from the shortest booking window to the longest. Empty windows are omitted. Invalid parameters return 400; a database failure returns 500.
