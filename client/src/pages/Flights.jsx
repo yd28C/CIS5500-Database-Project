@@ -39,7 +39,7 @@ export default function Flights({ airports }) {
     setSearch(`/flights/search?${params}`);
   }
   return <>
-    <Title title="Find flights" description="Explore 2025 flight operations alongside historical 2022 fare references." />
+    <Title title="Find flights" description="Compare flight times, reliability and price history." />
     <Card className="search-card">
       <div className="section-heading"><div><h2>Where are you headed?</h2></div></div>
       <form id="flight-search" className="search-grid" onSubmit={submit}>
