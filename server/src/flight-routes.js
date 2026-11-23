@@ -1,16 +1,16 @@
 const express = require('express');
-const fs = require('node:fs');
-const path = require('node:path');
-const { query } = require('./db');
+const { loadSql, query } = require('./db');
+const { OPERATIONS_YEAR, hasOnlyParams } = require('./request-params');
 
 const router = express.Router();
-const searchSql = fs.readFileSync(path.join(__dirname, '../sql/q1-search-flights.sql'), 'utf8');
-const trendsSql = fs.readFileSync(path.join(__dirname, '../sql/q3-booking-trends.sql'), 'utf8');
+const searchSql = loadSql('q1-search-flights.sql');
+const routeReliabilitySql = loadSql('q2-route-reliability.sql');
+const trendsSql = loadSql('q3-booking-trends.sql');
 
 // 2025 flight operations with same-route, carrier and month 2022 fare statistics.
-router.get('/flights/search', async (req, res) => {
+router.get('/flights/search', async (req, res, next) => {
   const allowed = ['origin', 'destination', 'date', 'departureStart', 'departureEnd', 'ticketType'];
-  if (Object.keys(req.query).some(key => !allowed.includes(key)) ||
+  if (!hasOnlyParams(req.query, allowed) ||
       Object.values(req.query).some(value => typeof value !== 'string' || value.trim() === '')) {
     return res.status(400).json({ error: 'Invalid or repeated query parameter' });
   }
@@ -22,7 +22,7 @@ router.get('/flights/search', async (req, res) => {
   if (!parsedDate || Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date || date.startsWith('0000')) {
     return res.status(400).json({ error: 'date must be a valid date in YYYY-MM-DD format' });
   }
-  if (!date.startsWith('2025-')) {
+  if (parsedDate.getUTCFullYear() !== OPERATIONS_YEAR) {
     return res.status(400).json({ error: 'Flight operations are available for 2025' });
   }
   const { departureStart, departureEnd, ticketType = 'any' } = req.query;
@@ -40,21 +40,32 @@ router.get('/flights/search', async (req, res) => {
       departureEnd ? Number(departureEnd.replace(':', '')) : null, ticketType]);
     res.json(rows);
   } catch (err) {
-    console.error('Flight search query failed', err.code ?? err.name);
-    res.status(500).json({ error: 'Database error' });
+    next(err);
+  }
+});
+
+router.get('/routes/reliability', async (req, res, next) => {
+  const { origin, destination } = req.query;
+  const validAirport = code => typeof code === 'string' && /^[a-z]{3}$/i.test(code);
+  if (!hasOnlyParams(req.query, ['origin', 'destination']) || !validAirport(origin) || !validAirport(destination)) {
+    return res.status(400).json({ error: 'Provide origin and destination as three-letter airport codes' });
+  }
+  try {
+    res.json(await query(routeReliabilitySql, [origin.toUpperCase(), destination.toUpperCase()]));
+  } catch (err) {
+    next(err);
   }
 });
 
 // Average fares by days between the search date and departure.
-router.get('/flights/booking-trends', async (req, res) => {
+router.get('/flights/booking-trends', async (req, res, next) => {
   if (Object.keys(req.query).length) {
     return res.status(400).json({ error: 'No query parameters are supported' });
   }
   try {
     res.json(await query(trendsSql));
   } catch (err) {
-    console.error('Booking trends query failed', err.code ?? err.name);
-    res.status(500).json({ error: 'Database error' });
+    next(err);
   }
 });
 

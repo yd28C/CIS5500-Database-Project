@@ -2,6 +2,11 @@
 require('dotenv').config({ quiet: true });
 const { Pool, types } = require('pg');
 const { readFileSync } = require('node:fs');
+const path = require('node:path');
+
+function loadSql(filename) {
+  return readFileSync(path.join(__dirname, '../sql', filename), 'utf8');
+}
 
 // Postgres sends COUNT(*) and NUMERIC as strings; convert them to JS numbers.
 types.setTypeParser(20, Number);   // bigint (COUNT)
@@ -25,4 +30,4 @@ async function query(text, params = []) {
   return result.rows;
 }
 
-module.exports = { query };
+module.exports = { loadSql, query };

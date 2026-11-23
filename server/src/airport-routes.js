@@ -1,9 +1,34 @@
 const express = require('express');
-const fs = require('node:fs');
-const path = require('node:path');
-const { query } = require('./db');
+const { loadSql, query } = require('./db');
+const { OPERATIONS_YEAR, hasOnlyParams, parseLimit } = require('./request-params');
 
 const router = express.Router();
+const topRoutesSql = loadSql('q8-airport-top-routes.sql');
+
+router.param('airportCode', (req, res, next, code) => {
+  if (!/^[a-z]{3}$/i.test(code)) {
+    return res.status(400).json({ error: 'airportCode must contain three letters' });
+  }
+  if (req.query.year !== undefined && req.query.year !== String(OPERATIONS_YEAR)) {
+    return res.status(400).json({ error: 'Airport data is available only for 2025' });
+  }
+  req.params.airportCode = code.toUpperCase();
+  next();
+});
+
+router.get('/airports/:airportCode/top-routes', async (req, res, next) => {
+  if (!hasOnlyParams(req.query, ['year', 'limit'])) {
+    return res.status(400).json({ error: 'Only year and limit are supported' });
+  }
+  const limit = parseLimit(req.query.limit);
+  if (limit === null) return res.status(400).json({ error: 'limit must be a positive integer' });
+  try {
+    res.json(await query(topRoutesSql, [req.params.airportCode, limit, OPERATIONS_YEAR]));
+  } catch (err) {
+    next(err);
+  }
+});
+
 const routes = [
   ['overview', 'q7-airport-overview.sql'],
   ['efficiency', 'q9-airport-efficiency.sql'],
@@ -11,29 +36,18 @@ const routes = [
 ];
 
 for (const [endpoint, file] of routes) {
-  const sql = fs.readFileSync(path.join(__dirname, '../sql', file), 'utf8');
-
-  router.get(`/airports/:airportCode/${endpoint}`, async (req, res) => {
-    const { airportCode } = req.params;
-    if (!/^[a-z]{3}$/i.test(airportCode)) {
-      return res.status(400).json({ error: 'airportCode must contain three letters' });
-    }
-    if (Object.keys(req.query).some(key => key !== 'year')) {
+  const sql = loadSql(file);
+  router.get(`/airports/:airportCode/${endpoint}`, async (req, res, next) => {
+    if (!hasOnlyParams(req.query, ['year'])) {
       return res.status(400).json({ error: 'Only the year query parameter is supported' });
     }
-    const year = req.query.year ?? '2025';
-    if (typeof year !== 'string' || !/^\d{4}$/.test(year) || Number(year) < 1900 || Number(year) > 2100) {
-      return res.status(400).json({ error: 'year must be one integer between 1900 and 2100' });
-    }
-
-    const code = airportCode.toUpperCase();
+    const code = req.params.airportCode;
     try {
-      const rows = await query(sql, [code, Number(year)]);
+      const rows = await query(sql, [code, OPERATIONS_YEAR]);
       if (!rows.length) return res.status(404).json({ error: `Airport ${code} not found` });
       res.json(endpoint === 'weather-reliability' ? rows : rows[0]);
     } catch (err) {
-      console.error('Airport query failed', file, err.code ?? err.name);
-      res.status(500).json({ error: 'Database error' });
+      next(err);
     }
   });
 }
