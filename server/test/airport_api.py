@@ -46,7 +46,7 @@ class AirportAPI(unittest.TestCase):
         for key in ("total_departures", "departures_with_delay_data", "delayed_departures", "cancelled_departures"):
             self.assertEqual(sum(m[key] for m in months), annual[key])
         for rate, numerator, denominator in [
-            ("departure_delay_rate", "delayed_departures", "departures_with_delay_data"),
+            ("out_delay_rate", "delayed_departures", "departures_with_delay_data"),
             ("cancellation_rate", "cancelled_departures", "total_departures"),
         ]:
             expected = rounded(Decimal(100 * annual[numerator]) / annual[denominator])
@@ -109,15 +109,13 @@ class AirportAPI(unittest.TestCase):
             self.assertIsNone(m["precipitation_inches"])
             self.assertIsNone(m["snowfall_inches"])
 
-    def test_empty_year_and_leap_february(self):
-        for endpoint in ("overview", "efficiency"):
-            row = self.success(f"/airports/PHL/{endpoint}?year=2024")
-            self.assertEqual(row["total_departures"], 0)
-            self.assertIsNone(row["first_departure_date"])
-        self.assertIsNone(row["avg_taxi_in_min"])
-        months = self.success("/airports/PHL/weather-reliability?year=2024")
-        self.assertEqual(months[1]["days_in_month"], 29)
-        self.assertTrue(all(m["cancellation_rate"] is None for m in months))
+    def test_supported_year(self):
+        for endpoint in ("overview", "efficiency", "weather-reliability", "top-routes"):
+            path = f"/airports/PHL/{endpoint}"
+            self.assertEqual(self.success(path), self.success(path + "?year=2025"))
+            for year in ("2022", "2024", "2026", "2025abc", "2025&year=2025"):
+                with self.subTest(endpoint=endpoint, year=year):
+                    self.assertEqual(get(path + "?year=" + year)[0], 400)
 
     def test_errors(self):
         for suffix in ("overview", "efficiency", "weather-reliability"):

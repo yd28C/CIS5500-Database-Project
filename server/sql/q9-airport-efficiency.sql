@@ -8,7 +8,7 @@ WITH departures AS (
                WHERE cancellation_code IS NOT NULL
            ) AS cancelled_departures,
            ROUND(100.0 * COUNT(*) FILTER (WHERE dep_delay_min >= 15)
-                 / NULLIF(COUNT(dep_delay_min), 0), 2) AS departure_delay_rate,
+                 / NULLIF(COUNT(dep_delay_min), 0), 2) AS out_delay_rate,
            ROUND(100.0 * COUNT(*) FILTER (
                      WHERE cancellation_code IS NOT NULL
                  ) / NULLIF(COUNT(*), 0), 2) AS cancellation_rate,

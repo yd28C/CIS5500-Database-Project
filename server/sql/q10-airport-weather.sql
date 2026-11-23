@@ -45,7 +45,7 @@ WITH months AS (
                WHERE cancellation_code IS NOT NULL
            ) AS cancelled_departures,
            ROUND(100.0 * COUNT(*) FILTER (WHERE dep_delay_min >= 15)
-                 / NULLIF(COUNT(dep_delay_min), 0), 2) AS departure_delay_rate,
+                 / NULLIF(COUNT(dep_delay_min), 0), 2) AS out_delay_rate,
            ROUND(100.0 * COUNT(*) FILTER (
                      WHERE cancellation_code IS NOT NULL
                  ) / NULLIF(COUNT(*), 0), 2) AS cancellation_rate,
@@ -71,7 +71,7 @@ SELECT a.airport_code, $2::integer AS year, s.station_id AS weather_station_id, 
        COALESCE(f.departures_with_delay_data, 0) AS departures_with_delay_data,
        COALESCE(f.delayed_departures, 0) AS delayed_departures,
        COALESCE(f.cancelled_departures, 0) AS cancelled_departures,
-       f.departure_delay_rate, f.cancellation_rate,
+       f.out_delay_rate, f.cancellation_rate,
        f.first_departure_date, f.last_departure_date
 FROM airport a
 CROSS JOIN months m

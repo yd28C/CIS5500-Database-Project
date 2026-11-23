@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 const api = async (path) => {
   const response = await fetch(`/api${path}`);
-  if (!response.ok) throw new Error("Unable to load data. Check that the server and database are running.");
+  if (!response.ok) {
+    if (response.status === 400 || response.status === 404) {
+      const body = await response.json().catch(() => null);
+      throw new Error(body?.error || `Request failed (HTTP ${response.status}).`);
+    }
+    throw new Error("Unable to load data. Check that the server and database are running.");
+  }
   return response.json();
 };
 const number = (n) => n == null ? "\u2014" : Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 });
